@@ -1,0 +1,891 @@
+{
+    "info": {
+        "_postman_id": "aa0e4f66-0d88-4636-a5fb-5ddd8a897d53",
+        "name": "CTK-Service_Activation-4.0.0",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "N1",
+            "item": [
+                {
+                    "name": "/Service",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "f92102ef-380c-4c7b-8f79-f7b1a1824fb9",
+                                "exec": [
+                                    "if (pm.response.code == 202) {",
+                                    "  instance = pm.response.json();",
+                                    "          pm.globals.set('MONITOR_ID', pm.response.headers.get('monitorId'));",
+                                    "  postman.setNextRequest(\"/Monitor\");",
+                                    "}",
+                                    "else {",
+                                    "  var jsonData = pm.response.json();",
+                                    "",
+                                    "  if (Array.isArray(jsonData)) {",
+                                    "",
+                                    "    pm.test('Array not expected as response', function () { pm.expect.fail() });",
+                                    "",
+                                    "",
+                                    "  }",
+                                    "",
+                                    "  pm.test(\"Status code is 201\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "  });",
+                                    "",
+                                    "  var instance = pm.response.json();",
+                                    "  var requiredAttributes = ['href', 'id', 'serviceDate', 'serviceSpecification', 'state'];",
+                                    "",
+                                    "  pm.test('Instance has all mandatory attributes', function () { pm.expect(Object.keys(instance)).to.include.members(requiredAttributes) });",
+                                    "",
+                                    "",
+                                    "",
+                                    "  pm.test('Response has href attribute', function () { pm.expect(instance[\"href\"]).to.be.a('string'); });",
+                                    "  pm.test('Response has id attribute', function () { pm.expect(instance[\"id\"]).to.be.a('string'); });",
+                                    "  pm.test('Response has serviceDate attribute', function () { pm.expect(instance[\"serviceDate\"]).to.be.a('string'); });",
+                                    "",
+                                    "  pm.globals.set('HREFSE01', instance['href']);",
+                                    "  pm.globals.set('IDSE01', instance['id']);",
+                                    "  pm.globals.set('SERVICEDATESE01', instance['serviceDate']);",
+                                    "",
+                                    "  pm.test('Body includes value held on href', function () {",
+                                    "    pm.expect(pm.response.text()).to.include(instance['href']);",
+                                    "  });",
+                                    "  pm.test('Body includes value held on id', function () {",
+                                    "    pm.expect(pm.response.text()).to.include(instance['id']);",
+                                    "  });",
+                                    "  pm.test('Body includes value held on serviceDate', function () {",
+                                    "    pm.expect(pm.response.text()).to.include(instance['serviceDate']);",
+                                    "  });",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"serviceSpecification\": {\n    \"id\": \"cfs45\"\n  },\n  \"state\": \"active\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{Service_Activation}}service",
+                            "host": [
+                                "{{Service_Activation}}service"
+                            ]
+                        },
+                        "description": "This operation creates a Service"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "/Service",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "1c1bb39c-66f6-4104-9c17-9292b4d3c656",
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "  ",
+                                    "  ",
+                                    "  ",
+                                    "var jsonData = pm.response.json();",
+                                    "  ",
+                                    "if (Array.isArray(jsonData) && (jsonData.length > 0)) {",
+                                    "    jsonData.forEach(function (instance, index) {",
+                                    "      ",
+                                    "        var requiredAttributes = ['href', 'id', 'serviceDate', 'serviceSpecification', 'state'];",
+                                    "      ",
+                                    "        pm.test('Instance has all mandatory attributes', function () { pm.expect(Object.keys(instance)).to.include.members(requiredAttributes) });",
+                                    "      ",
+                                    "      ",
+                                    "      ",
+                                    "        pm.test('Response has href attribute', function() { pm.expect(instance[\"href\"]).to.be.a('string'); });",
+                                    "        pm.test('Response has id attribute', function() { pm.expect(instance[\"id\"]).to.be.a('string'); });",
+                                    "        pm.test('Response has serviceDate attribute', function() { pm.expect(instance[\"serviceDate\"]).to.be.a('string'); });",
+                                    "      ",
+                                    "        pm.test('Body includes value held on href', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['href']);",
+                                    "        });",
+                                    "        pm.test('Body includes value held on id', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['id']);",
+                                    "        });",
+                                    "        pm.test('Body includes value held on serviceDate', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['serviceDate']);",
+                                    "        });",
+                                    "        // Individualized tests",
+                                    "        if (instance.id == pm.globals.get(\"IDSE01\")) {",
+                                    "            pm.test('href is ' + pm.globals.get(\"HREFSE01\"), function() {pm.expect(instance['href']) == pm.globals.get('HREFSE01');});",
+                                    "            pm.test('id is ' + pm.globals.get(\"IDSE01\"), function() {pm.expect(instance['id']) == pm.globals.get('IDSE01');});",
+                                    "            pm.test('serviceDate is ' + pm.globals.get(\"SERVICEDATESE01\"), function() {pm.expect(instance['serviceDate']) == pm.globals.get('SERVICEDATESE01');});",
+                                    "        }",
+                                    "        if (instance.id == pm.globals.get(\"IDSE02\")) {",
+                                    "            pm.test('href is ' + pm.globals.get(\"HREFSE02\"), function() {pm.expect(instance['href']) == pm.globals.get('HREFSE02');});",
+                                    "            pm.test('id is ' + pm.globals.get(\"IDSE02\"), function() {pm.expect(instance['id']) == pm.globals.get('IDSE02');});",
+                                    "            pm.test('serviceDate is ' + pm.globals.get(\"SERVICEDATESE02\"), function() {pm.expect(instance['serviceDate']) == pm.globals.get('SERVICEDATESE02');});",
+                                    "        }  ",
+                                    "    });",
+                                    "  }",
+                                    "  else {",
+                                    "    var instance = pm.response.json();",
+                                    "    var requiredAttributes = ['href', 'id', 'serviceDate', 'serviceSpecification', 'state'];",
+                                    "      ",
+                                    "        pm.test('Instance has all mandatory attributes', function () { pm.expect(Object.keys(instance)).to.include.members(requiredAttributes) });",
+                                    "      ",
+                                    "      ",
+                                    "      ",
+                                    "        pm.test('Response has href attribute', function() { pm.expect(instance[\"href\"]).to.be.a('string'); });",
+                                    "        pm.test('Response has id attribute', function() { pm.expect(instance[\"id\"]).to.be.a('string'); });",
+                                    "        pm.test('Response has serviceDate attribute', function() { pm.expect(instance[\"serviceDate\"]).to.be.a('string'); });",
+                                    "      ",
+                                    "        pm.test('Body includes value held on href', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['href']);",
+                                    "        });",
+                                    "        pm.test('Body includes value held on id', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['id']);",
+                                    "        });",
+                                    "        pm.test('Body includes value held on serviceDate', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['serviceDate']);",
+                                    "        });",
+                                    "        // Individualized tests",
+                                    "        if (instance.id == pm.globals.get(\"IDSE01\")) {",
+                                    "            pm.test('href is ' + pm.globals.get(\"HREFSE01\"), function() {pm.expect(instance['href']) == pm.globals.get('HREFSE01');});",
+                                    "            pm.test('id is ' + pm.globals.get(\"IDSE01\"), function() {pm.expect(instance['id']) == pm.globals.get('IDSE01');});",
+                                    "            pm.test('serviceDate is ' + pm.globals.get(\"SERVICEDATESE01\"), function() {pm.expect(instance['serviceDate']) == pm.globals.get('SERVICEDATESE01');});",
+                                    "        }",
+                                    "        if (instance.id == pm.globals.get(\"IDSE02\")) {",
+                                    "            pm.test('href is ' + pm.globals.get(\"HREFSE02\"), function() {pm.expect(instance['href']) == pm.globals.get('HREFSE02');});",
+                                    "            pm.test('id is ' + pm.globals.get(\"IDSE02\"), function() {pm.expect(instance['id']) == pm.globals.get('IDSE02');});",
+                                    "            pm.test('serviceDate is ' + pm.globals.get(\"SERVICEDATESE02\"), function() {pm.expect(instance['serviceDate']) == pm.globals.get('SERVICEDATESE02');});",
+                                    "        }",
+                                    "   ",
+                                    "  }",
+                                    "  ",
+                                    "  "
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{Service_Activation}}service",
+                            "host": [
+                                "{{Service_Activation}}service"
+                            ]
+                        },
+                        "description": "This operation search for the created Service"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "/Service/{{IDSE01}}",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "d79f085b-77b2-4864-bbc5-a72fc1756e30",
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "  ",
+                                    "  ",
+                                    "  ",
+                                    "var jsonData = pm.response.json();",
+                                    "  ",
+                                    "if (Array.isArray(jsonData) && (jsonData.length > 0)) {",
+                                    "    jsonData.forEach(function (instance, index) {",
+                                    "      ",
+                                    "        var requiredAttributes = ['href', 'id', 'serviceDate', 'serviceSpecification', 'state'];",
+                                    "      ",
+                                    "        pm.test('Instance has all mandatory attributes', function () { pm.expect(Object.keys(instance)).to.include.members(requiredAttributes) });",
+                                    "      ",
+                                    "      ",
+                                    "      ",
+                                    "        pm.test('Response has href attribute', function() { pm.expect(instance[\"href\"]).to.be.a('string'); });",
+                                    "        pm.test('Response has id attribute', function() { pm.expect(instance[\"id\"]).to.be.a('string'); });",
+                                    "        pm.test('Response has serviceDate attribute', function() { pm.expect(instance[\"serviceDate\"]).to.be.a('string'); });",
+                                    "      ",
+                                    "        pm.test('Body includes value held on href', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['href']);",
+                                    "        });",
+                                    "        pm.test('Body includes value held on id', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['id']);",
+                                    "        });",
+                                    "        pm.test('Body includes value held on serviceDate', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['serviceDate']);",
+                                    "        });",
+                                    "        // Individualized tests",
+                                    "        if (instance.id == pm.globals.get(\"IDSE01\")) {",
+                                    "            pm.test('href is ' + pm.globals.get(\"HREFSE01\"), function() {pm.expect(instance['href']) == pm.globals.get('HREFSE01');});",
+                                    "            pm.test('id is ' + pm.globals.get(\"IDSE01\"), function() {pm.expect(instance['id']) == pm.globals.get('IDSE01');});",
+                                    "            pm.test('serviceDate is ' + pm.globals.get(\"SERVICEDATESE01\"), function() {pm.expect(instance['serviceDate']) == pm.globals.get('SERVICEDATESE01');});",
+                                    "        }",
+                                    "        if (instance.id == pm.globals.get(\"IDSE02\")) {",
+                                    "            pm.test('IDSE02 not expected on this test', function () {",
+                                    "                console.log(\"Non expected resource, may happen if there is a collision on attributes\")",
+                                    "            });",
+                                    "        }",
+                                    "          ",
+                                    "    });",
+                                    "  }",
+                                    "  else {",
+                                    "    var instance = pm.response.json();",
+                                    "    var requiredAttributes = ['href', 'id', 'serviceDate', 'serviceSpecification', 'state'];",
+                                    "      ",
+                                    "        pm.test('Instance has all mandatory attributes', function () { pm.expect(Object.keys(instance)).to.include.members(requiredAttributes) });",
+                                    "      ",
+                                    "      ",
+                                    "      ",
+                                    "        pm.test('Response has href attribute', function() { pm.expect(instance[\"href\"]).to.be.a('string'); });",
+                                    "        pm.test('Response has id attribute', function() { pm.expect(instance[\"id\"]).to.be.a('string'); });",
+                                    "        pm.test('Response has serviceDate attribute', function() { pm.expect(instance[\"serviceDate\"]).to.be.a('string'); });",
+                                    "      ",
+                                    "        pm.test('Body includes value held on href', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['href']);",
+                                    "        });",
+                                    "        pm.test('Body includes value held on id', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['id']);",
+                                    "        });",
+                                    "        pm.test('Body includes value held on serviceDate', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['serviceDate']);",
+                                    "        });",
+                                    "        // Individualized tests",
+                                    "        if (instance.id == pm.globals.get(\"IDSE01\")) {",
+                                    "            pm.test('href is ' + pm.globals.get(\"HREFSE01\"), function() {pm.expect(instance['href']) == pm.globals.get('HREFSE01');});",
+                                    "            pm.test('id is ' + pm.globals.get(\"IDSE01\"), function() {pm.expect(instance['id']) == pm.globals.get('IDSE01');});",
+                                    "            pm.test('serviceDate is ' + pm.globals.get(\"SERVICEDATESE01\"), function() {pm.expect(instance['serviceDate']) == pm.globals.get('SERVICEDATESE01');});",
+                                    "        }",
+                                    "        if (instance.id == pm.globals.get(\"IDSE02\")) {",
+                                    "            pm.test('IDSE02 not expected on this test', function () {",
+                                    "                console.log(\"Non expected resource, may happen if there is a collision on attributes\")",
+                                    "            });",
+                                    "        }",
+                                    "",
+                                    "        ",
+                                    "   ",
+                                    "}",
+                                    "  ",
+                                    "  "
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{Service_Activation}}service/{{IDSE01}}",
+                            "host": [
+                                "{{Service_Activation}}service"
+                            ],
+                            "path": [
+                                "{{IDSE01}}"
+                            ]
+                        },
+                        "description": "This operation search for one of the created Service"
+                    },
+                    "response": []
+                }
+            ],
+            "protocolProfileBehavior": {}
+        },
+        {
+            "name": "N2",
+            "item": [
+                {
+                    "name": "/Service?id={{IDSE01}}",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "9d014ba8-fe3e-4789-9539-45a3114f52f1",
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "  ",
+                                    "  ",
+                                    "  ",
+                                    "var jsonData = pm.response.json();",
+                                    "  ",
+                                    "if (Array.isArray(jsonData) && (jsonData.length > 0)) {",
+                                    "    jsonData.forEach(function (instance, index) {",
+                                    "      ",
+                                    "        var requiredAttributes = ['href', 'id', 'serviceDate', 'serviceSpecification', 'state'];",
+                                    "      ",
+                                    "        pm.test('Instance has all mandatory attributes', function () { pm.expect(Object.keys(instance)).to.include.members(requiredAttributes) });",
+                                    "      ",
+                                    "      ",
+                                    "      ",
+                                    "        pm.test('Response has href attribute', function() { pm.expect(instance[\"href\"]).to.be.a('string'); });",
+                                    "        pm.test('Response has id attribute', function() { pm.expect(instance[\"id\"]).to.be.a('string'); });",
+                                    "        pm.test('Response has serviceDate attribute', function() { pm.expect(instance[\"serviceDate\"]).to.be.a('string'); });",
+                                    "      ",
+                                    "        pm.test('Body includes value held on href', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['href']);",
+                                    "        });",
+                                    "        pm.test('Body includes value held on id', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['id']);",
+                                    "        });",
+                                    "        pm.test('Body includes value held on serviceDate', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['serviceDate']);",
+                                    "        });",
+                                    "        // Individualized tests",
+                                    "        if (instance.id == pm.globals.get(\"IDSE01\")) {",
+                                    "            pm.test('href is ' + pm.globals.get(\"HREFSE01\"), function() {pm.expect(instance['href']) == pm.globals.get('HREFSE01');});",
+                                    "            pm.test('id is ' + pm.globals.get(\"IDSE01\"), function() {pm.expect(instance['id']) == pm.globals.get('IDSE01');});",
+                                    "            pm.test('serviceDate is ' + pm.globals.get(\"SERVICEDATESE01\"), function() {pm.expect(instance['serviceDate']) == pm.globals.get('SERVICEDATESE01');});",
+                                    "        }",
+                                    "        if (instance.id == pm.globals.get(\"IDSE02\")) {",
+                                    "            pm.test('IDSE02 not expected on this test', function () {",
+                                    "                console.log(\"Non expected resource, may happen if there is a collision on attributes\")",
+                                    "            });",
+                                    "        }",
+                                    "          ",
+                                    "    });",
+                                    "  }",
+                                    "  else {",
+                                    "    var instance = pm.response.json();",
+                                    "    var requiredAttributes = ['href', 'id', 'serviceDate', 'serviceSpecification', 'state'];",
+                                    "      ",
+                                    "        pm.test('Instance has all mandatory attributes', function () { pm.expect(Object.keys(instance)).to.include.members(requiredAttributes) });",
+                                    "      ",
+                                    "      ",
+                                    "      ",
+                                    "        pm.test('Response has href attribute', function() { pm.expect(instance[\"href\"]).to.be.a('string'); });",
+                                    "        pm.test('Response has id attribute', function() { pm.expect(instance[\"id\"]).to.be.a('string'); });",
+                                    "        pm.test('Response has serviceDate attribute', function() { pm.expect(instance[\"serviceDate\"]).to.be.a('string'); });",
+                                    "      ",
+                                    "        pm.test('Body includes value held on href', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['href']);",
+                                    "        });",
+                                    "        pm.test('Body includes value held on id', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['id']);",
+                                    "        });",
+                                    "        pm.test('Body includes value held on serviceDate', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['serviceDate']);",
+                                    "        });",
+                                    "        // Individualized tests",
+                                    "        if (instance.id == pm.globals.get(\"IDSE01\")) {",
+                                    "            pm.test('href is ' + pm.globals.get(\"HREFSE01\"), function() {pm.expect(instance['href']) == pm.globals.get('HREFSE01');});",
+                                    "            pm.test('id is ' + pm.globals.get(\"IDSE01\"), function() {pm.expect(instance['id']) == pm.globals.get('IDSE01');});",
+                                    "            pm.test('serviceDate is ' + pm.globals.get(\"SERVICEDATESE01\"), function() {pm.expect(instance['serviceDate']) == pm.globals.get('SERVICEDATESE01');});",
+                                    "        }",
+                                    "        if (instance.id == pm.globals.get(\"IDSE02\")) {",
+                                    "            pm.test('IDSE02 not expected on this test', function () {",
+                                    "                console.log(\"Non expected resource, may happen if there is a collision on attributes\")",
+                                    "            });",
+                                    "        }",
+                                    "",
+                                    "        ",
+                                    "   ",
+                                    "}",
+                                    "  ",
+                                    "  "
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{Service_Activation}}service?id={{IDSE01}}",
+                            "host": [
+                                "{{Service_Activation}}service"
+                            ],
+                            "query": [
+                                {
+                                    "key": "id",
+                                    "value": "{{IDSE01}}"
+                                }
+                            ]
+                        },
+                        "description": "This operation filter a Service"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "/Service?fields=serviceDate",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "7573498f-d928-4887-873d-cbb801ee9e43",
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{Service_Activation}}service?fields=serviceDate",
+                            "host": [
+                                "{{Service_Activation}}service"
+                            ],
+                            "query": [
+                                {
+                                    "key": "fields",
+                                    "value": "serviceDate"
+                                }
+                            ]
+                        },
+                        "description": "This operation filter a Service"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "/Service?serviceDate={{SERVICEDATESE01}}",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "dcbc4b32-b110-4fa5-b2a8-215bca74bed8",
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "  ",
+                                    "  ",
+                                    "  ",
+                                    "var jsonData = pm.response.json();",
+                                    "  ",
+                                    "if (Array.isArray(jsonData) && (jsonData.length > 0)) {",
+                                    "    jsonData.forEach(function (instance, index) {",
+                                    "      ",
+                                    "        var requiredAttributes = ['href', 'id', 'serviceDate', 'serviceSpecification', 'state'];",
+                                    "      ",
+                                    "        pm.test('Instance has all mandatory attributes', function () { pm.expect(Object.keys(instance)).to.include.members(requiredAttributes) });",
+                                    "      ",
+                                    "      ",
+                                    "      ",
+                                    "        pm.test('Response has href attribute', function() { pm.expect(instance[\"href\"]).to.be.a('string'); });",
+                                    "        pm.test('Response has id attribute', function() { pm.expect(instance[\"id\"]).to.be.a('string'); });",
+                                    "        pm.test('Response has serviceDate attribute', function() { pm.expect(instance[\"serviceDate\"]).to.be.a('string'); });",
+                                    "      ",
+                                    "        pm.test('Body includes value held on href', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['href']);",
+                                    "        });",
+                                    "        pm.test('Body includes value held on id', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['id']);",
+                                    "        });",
+                                    "        pm.test('Body includes value held on serviceDate', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['serviceDate']);",
+                                    "        });",
+                                    "        // Individualized tests",
+                                    "        if (instance.id == pm.globals.get(\"IDSE01\")) {",
+                                    "            pm.test('href is ' + pm.globals.get(\"HREFSE01\"), function() {pm.expect(instance['href']) == pm.globals.get('HREFSE01');});",
+                                    "            pm.test('id is ' + pm.globals.get(\"IDSE01\"), function() {pm.expect(instance['id']) == pm.globals.get('IDSE01');});",
+                                    "            pm.test('serviceDate is ' + pm.globals.get(\"SERVICEDATESE01\"), function() {pm.expect(instance['serviceDate']) == pm.globals.get('SERVICEDATESE01');});",
+                                    "        }",
+                                    "        if (instance.id == pm.globals.get(\"IDSE02\")) {",
+                                    "            pm.test('IDSE02 not expected on this test', function () {",
+                                    "                console.log(\"Non expected resource, may happen if there is a collision on attributes\")",
+                                    "            });",
+                                    "        }",
+                                    "          ",
+                                    "    });",
+                                    "  }",
+                                    "  else {",
+                                    "    var instance = pm.response.json();",
+                                    "    var requiredAttributes = ['href', 'id', 'serviceDate', 'serviceSpecification', 'state'];",
+                                    "      ",
+                                    "        pm.test('Instance has all mandatory attributes', function () { pm.expect(Object.keys(instance)).to.include.members(requiredAttributes) });",
+                                    "      ",
+                                    "      ",
+                                    "      ",
+                                    "        pm.test('Response has href attribute', function() { pm.expect(instance[\"href\"]).to.be.a('string'); });",
+                                    "        pm.test('Response has id attribute', function() { pm.expect(instance[\"id\"]).to.be.a('string'); });",
+                                    "        pm.test('Response has serviceDate attribute', function() { pm.expect(instance[\"serviceDate\"]).to.be.a('string'); });",
+                                    "      ",
+                                    "        pm.test('Body includes value held on href', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['href']);",
+                                    "        });",
+                                    "        pm.test('Body includes value held on id', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['id']);",
+                                    "        });",
+                                    "        pm.test('Body includes value held on serviceDate', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['serviceDate']);",
+                                    "        });",
+                                    "        // Individualized tests",
+                                    "        if (instance.id == pm.globals.get(\"IDSE01\")) {",
+                                    "            pm.test('href is ' + pm.globals.get(\"HREFSE01\"), function() {pm.expect(instance['href']) == pm.globals.get('HREFSE01');});",
+                                    "            pm.test('id is ' + pm.globals.get(\"IDSE01\"), function() {pm.expect(instance['id']) == pm.globals.get('IDSE01');});",
+                                    "            pm.test('serviceDate is ' + pm.globals.get(\"SERVICEDATESE01\"), function() {pm.expect(instance['serviceDate']) == pm.globals.get('SERVICEDATESE01');});",
+                                    "        }",
+                                    "        if (instance.id == pm.globals.get(\"IDSE02\")) {",
+                                    "            pm.test('IDSE02 not expected on this test', function () {",
+                                    "                console.log(\"Non expected resource, may happen if there is a collision on attributes\")",
+                                    "            });",
+                                    "        }",
+                                    "",
+                                    "        ",
+                                    "   ",
+                                    "}",
+                                    "  ",
+                                    "  "
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{Service_Activation}}service?serviceDate={{SERVICEDATESE01}}",
+                            "host": [
+                                "{{Service_Activation}}service"
+                            ],
+                            "query": [
+                                {
+                                    "key": "serviceDate",
+                                    "value": "{{SERVICEDATESE01}}"
+                                }
+                            ]
+                        },
+                        "description": "This operation filter a Service"
+                    },
+                    "response": []
+                }
+            ],
+            "protocolProfileBehavior": {}
+        },
+        {
+            "name": "E1",
+            "item": [
+                {
+                    "name": "/Service/404ID",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "ebc63322-024b-4f04-9f8c-d601857de428",
+                                "exec": [
+                                    "pm.test(\"Status code is 404\", function () {",
+                                    "    pm.response.to.have.status(404);",
+                                    "});",
+                                    "",
+                                    "postman.setNextRequest(null)"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{Service_Activation}}service/55ba5a5c-ff73-44f0-8c48-398b35aecd49",
+                            "host": [
+                                "{{Service_Activation}}service"
+                            ],
+                            "path": [
+                                "55ba5a5c-ff73-44f0-8c48-398b35aecd49"
+                            ]
+                        },
+                        "description": "This operation search for one of the created Service"
+                    },
+                    "response": []
+                }
+            ],
+            "protocolProfileBehavior": {}
+        },
+        {
+            "name": "N1",
+            "item": [
+                {
+                    "name": "/Monitor",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "c1b9fa71-1ae7-4e90-a4fa-cd4bcc0517af",
+                                "exec": [
+                                    "",
+                                    "",
+                                    "var instance = pm.response.json();",
+                                    "",
+                                    "if (Array.isArray(instance)) { ",
+                                    "  ",
+                                    "    pm.test('Array not expected as response', function (){pm.expect.fail()});",
+                                    "    postman.setNextRequest(\"null\");",
+                                    "",
+                                    "}",
+                                    "else {",
+                                    "  if (pm.response.code == 200){",
+                                    "    if (instance['state'] == \"Completed\"){",
+                                    "      pm.globals.set('monitor_tries', 0)",
+                                    "      var requiredAttributes = ['href', 'id', 'state'];",
+                                    "",
+                                    "      pm.test('Instance has all mandatory attributes', function () { pm.expect(Object.keys(instance)).to.include.members(requiredAttributes) });",
+                                    "      pm.test('Response has href attribute', function() { pm.expect(instance[\"href\"]).to.be.a('string'); });",
+                                    "      pm.test('Response has id attribute', function() { pm.expect(instance[\"id\"]).to.be.a('string'); });",
+                                    "      pm.test('Response has state attribute', function() { pm.expect(instance[\"state\"]).to.be.a('string'); });",
+                                    "      postman.setNextRequest(\"/Service202\");",
+                                    "    }",
+                                    "    else{",
+                                    "      postman.setNextRequest(\"/Monitor\");",
+                                    "      setTimeout(function(){}, [5000]);",
+                                    "      if (pm.globals.get('monitor_tries')){",
+                                    "        if (pm.globals.get('monitor_tries') <= 36){",
+                                    "          pm.globals.set(\"monitor_tries\", pm.globals.get('monitor_tries') + 1);",
+                                    "        }",
+                                    "        else {",
+                                    "              pm.test('Monitor did not resolve after 3 minutes, aborting test', function (){pm.expect.fail()});",
+                                    "              postman.setNextRequest(null);",
+                                    "        }",
+                                    "        ",
+                                    "",
+                                    "      }",
+                                    "      else{",
+                                    "        pm.globals.set('monitor_tries', 1)",
+                                    "      }",
+                                    "    }",
+                                    "  }",
+                                    "",
+                                    "}",
+                                    "",
+                                    "",
+                                    "",
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{Service_Activation}}monitor/{{MONITOR_ID}}",
+                            "host": [
+                                "{{Service_Activation}}monitor"
+                            ],
+                            "path": [
+                                "{{MONITOR_ID}}"
+                            ]
+                        },
+                        "description": "This operation retrieves a Monitor"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "/Service202",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "abf20f05-c76e-4f1d-a355-25d724205a70",
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "",
+                                    "",
+                                    "var jsonData = pm.response.json();",
+                                    "",
+                                    "if (Array.isArray(jsonData) && (jsonData.length > 0)) {",
+                                    "    jsonData.forEach(function (instance, index) {",
+                                    "",
+                                    "        var requiredAttributes = ['href', 'id', 'serviceDate', 'serviceSpecification', 'state'];",
+                                    "",
+                                    "        pm.test('Instance has all mandatory attributes', function () { pm.expect(Object.keys(instance)).to.include.members(requiredAttributes) });",
+                                    "",
+                                    "",
+                                    "",
+                                    "        pm.test('Response has href attribute', function () { pm.expect(instance[\"href\"]).to.be.a('string'); });",
+                                    "        pm.test('Response has id attribute', function () { pm.expect(instance[\"id\"]).to.be.a('string'); });",
+                                    "        pm.test('Response has serviceDate attribute', function () { pm.expect(instance[\"serviceDate\"]).to.be.a('string'); });",
+                                    "",
+                                    "        pm.globals.set('HREFSE01', instance['href']);",
+                                    "        pm.globals.set('IDSE01', instance['id']);",
+                                    "        pm.globals.set('SERVICEDATESE01', instance['serviceDate']);",
+                                    "",
+                                    "        pm.test('Body includes value held on href', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['href']);",
+                                    "        });",
+                                    "        pm.test('Body includes value held on id', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['id']);",
+                                    "        });",
+                                    "        pm.test('Body includes value held on serviceDate', function () {",
+                                    "            pm.expect(pm.response.text()).to.include(instance['serviceDate']);",
+                                    "        });",
+                                    "        // Individualized tests",
+                                    "        if (instance.id == pm.globals.get(\"IDSE01\")) {",
+                                    "            pm.test('href is ' + pm.globals.get(\"HREFSE01\"), function () { pm.expect(instance['href']) == pm.globals.get('HREFSE01'); });",
+                                    "            pm.test('id is ' + pm.globals.get(\"IDSE01\"), function () { pm.expect(instance['id']) == pm.globals.get('IDSE01'); });",
+                                    "            pm.test('serviceDate is ' + pm.globals.get(\"SERVICEDATESE01\"), function () { pm.expect(instance['serviceDate']) == pm.globals.get('SERVICEDATESE01'); });",
+                                    "        }",
+                                    "        if (instance.id == pm.globals.get(\"IDSE02\")) {",
+                                    "            pm.test('href is ' + pm.globals.get(\"HREFSE02\"), function () { pm.expect(instance['href']) == pm.globals.get('HREFSE02'); });",
+                                    "            pm.test('id is ' + pm.globals.get(\"IDSE02\"), function () { pm.expect(instance['id']) == pm.globals.get('IDSE02'); });",
+                                    "            pm.test('serviceDate is ' + pm.globals.get(\"SERVICEDATESE02\"), function () { pm.expect(instance['serviceDate']) == pm.globals.get('SERVICEDATESE02'); });",
+                                    "        }",
+                                    "        ",
+                                    "    });",
+                                    "    postman.setNextRequest(\"/Service/{{IDSE01}}\");",
+                                    "}",
+                                    "else {",
+                                    "    var instance = pm.response.json();",
+                                    "    var requiredAttributes = ['href', 'id', 'serviceDate', 'serviceSpecification', 'state'];",
+                                    "",
+                                    "    pm.test('Instance has all mandatory attributes', function () { pm.expect(Object.keys(instance)).to.include.members(requiredAttributes) });",
+                                    "",
+                                    "",
+                                    "",
+                                    "    pm.test('Response has href attribute', function () { pm.expect(instance[\"href\"]).to.be.a('string'); });",
+                                    "    pm.test('Response has id attribute', function () { pm.expect(instance[\"id\"]).to.be.a('string'); });",
+                                    "    pm.test('Response has serviceDate attribute', function () { pm.expect(instance[\"serviceDate\"]).to.be.a('string'); });",
+                                    "",
+                                    "    pm.globals.set('HREFSE01', instance['href']);",
+                                    "    pm.globals.set('IDSE01', instance['id']);",
+                                    "    pm.globals.set('SERVICEDATESE01', instance['serviceDate']);",
+                                    "",
+                                    "    pm.test('Body includes value held on href', function () {",
+                                    "        pm.expect(pm.response.text()).to.include(instance['href']);",
+                                    "    });",
+                                    "    pm.test('Body includes value held on id', function () {",
+                                    "        pm.expect(pm.response.text()).to.include(instance['id']);",
+                                    "    });",
+                                    "    pm.test('Body includes value held on serviceDate', function () {",
+                                    "        pm.expect(pm.response.text()).to.include(instance['serviceDate']);",
+                                    "    });",
+                                    "    // Individualized tests",
+                                    "    if (instance.id == pm.globals.get(\"IDSE01\")) {",
+                                    "        pm.test('href is ' + pm.globals.get(\"HREFSE01\"), function () { pm.expect(instance['href']) == pm.globals.get('HREFSE01'); });",
+                                    "        pm.test('id is ' + pm.globals.get(\"IDSE01\"), function () { pm.expect(instance['id']) == pm.globals.get('IDSE01'); });",
+                                    "        pm.test('serviceDate is ' + pm.globals.get(\"SERVICEDATESE01\"), function () { pm.expect(instance['serviceDate']) == pm.globals.get('SERVICEDATESE01'); });",
+                                    "    }",
+                                    "    if (instance.id == pm.globals.get(\"IDSE02\")) {",
+                                    "        pm.test('href is ' + pm.globals.get(\"HREFSE02\"), function () { pm.expect(instance['href']) == pm.globals.get('HREFSE02'); });",
+                                    "        pm.test('id is ' + pm.globals.get(\"IDSE02\"), function () { pm.expect(instance['id']) == pm.globals.get('IDSE02'); });",
+                                    "        pm.test('serviceDate is ' + pm.globals.get(\"SERVICEDATESE02\"), function () { pm.expect(instance['serviceDate']) == pm.globals.get('SERVICEDATESE02'); });",
+                                    "    }",
+                                    "    postman.setNextRequest(\"/Service/{{IDSE01}}\");",
+                                    "}",
+                                    "",
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{Service_Activation}}service",
+                            "host": [
+                                "{{Service_Activation}}service"
+                            ]
+                        },
+                        "description": "This operation search for the created Service"
+                    },
+                    "response": []
+                }
+            ],
+            "protocolProfileBehavior": {}
+        }
+    ],
+    "protocolProfileBehavior": {}
+}

@@ -1,0 +1,22 @@
+{
+    "url": "http://tmf640-serviceactivation-v4.mybluemix.net/tmf-api/ServiceActivationAndConfiguration/v4/",
+    "headers": {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer 1321321"
+    },
+    "payloads": {
+        "Service": {
+            "POST": {
+                "payload": {
+                    "serviceSpecification": {
+                      "id": "cfs45"
+                    },
+                    "state": "active"
+                  }
+
+            }
+        }
+    }
+}
+        

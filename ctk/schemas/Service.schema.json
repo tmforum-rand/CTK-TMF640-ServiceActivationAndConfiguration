@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "serviceSpecification": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": ["id"]
+        },
+        "state": {
+            "type": "string"
+        }
+    },
+    "required": ["serviceSpecification", "state"]
+}
